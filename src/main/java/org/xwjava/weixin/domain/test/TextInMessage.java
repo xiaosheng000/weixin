@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @XmlRootElement(name="xml")//JAXB读取xml时根元素名称
 public class TextInMessage extends InMessage {
 
-	@XmlElement(name="Context")
+	@XmlElement(name="Content")
 	@JsonProperty("Content")
 	private String content;
 	
