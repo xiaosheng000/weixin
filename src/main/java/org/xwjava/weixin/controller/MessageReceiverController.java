@@ -55,7 +55,9 @@ public class MessageReceiverController {
 		LOG.trace("收到的消息原文: \n{}\n--------------------", xml);
 		
 		//截取消息类型
-		String type= xml.substring(0);
+		//<MsgType><![CDATA[text]]></MsgType>
+		String type= xml.substring(xml.indexOf("<MsgType><![CDATA[")+18);
+		type = type.substring(0,type.indexOf("]]></MsgType>"));
 		Class<InMessage> cla=MessageTypeMapper.getClass(type);
 		
 		//使用JAXB完成XML转换为Java对象的操作
