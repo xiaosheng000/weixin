@@ -9,6 +9,7 @@ import javax.xml.bind.JAXB;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -36,6 +37,7 @@ public class MessageReceiverController {
 	private static final Logger LOG = LoggerFactory.getLogger(MessageReceiverController.class);
 	
 	@Autowired
+	@Qualifier("inMessageTemplate")
 	private RedisTemplate<String, InMessage> inMessageTemplate;
 	
 	@GetMapping //只处理GET请求
@@ -80,11 +82,11 @@ public class MessageReceiverController {
 		LOG.debug("转换得到的消息对象：\n{}\n", inMessage.toString());
 		
 		//把消息放入消息队列
-		inMessageTemplate.execute(new RedisCallback<>() {
+		inMessageTemplate.execute(new RedisCallback<String>() {
 
 			//connection对象表示跟Redis数据库的连接
 			@Override
-			public Object doInRedis(RedisConnection connection) throws DataAccessException {
+			public String doInRedis(RedisConnection connection) throws DataAccessException {
 				
 				try {
 				//发布消息的时候，需要准备两个Byte[]
@@ -92,7 +94,7 @@ public class MessageReceiverController {
 				//比如文本消息、图片消息处理方式不同，所以使用前端来隔离：text*表示文本消息、image*表示图片消息
 				//建议在多人共享一个服务器的时候，每个人使用不同的数据库实例即可，并且建议在通道名称之前加上反向代理的前缀。
 				
-				String channel = "xiaowei_1" + inMessage.getMsgType();
+				String channel = "xiaowei_1_" + inMessage.getMsgType();
 				
 				//消息内容要自己序列化才能放入队列中
 				ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -104,7 +106,6 @@ public class MessageReceiverController {
 				}catch(Exception e) {
 					LOG.error("把消息队列放入队列是出现问题：",e.getLocalizedMessage(), e);
 				}
-				
 				return null;
 			}
 		});
