@@ -15,26 +15,27 @@ public class TextInMessage extends InMessage {
 
 	@XmlElement(name="Context")
 	@JsonProperty("Content")
-	private String context;
+	private String content;
 	
 	public TextInMessage() {
 		super.setMsgType("text");
 	}
 
-	public String getContext() {
-		return context;
+	public String getContent() {
+		return content;
 	}
 
-	public void setContext(String context) {
-		this.context = context;
+	public void setContent(String content) {
+		this.content = content;
 	}
-	
-	//如果想要打印一些有意义的消息出来，必须重写此方法，否则只能打印一个内存地址
+
 	@Override
 	public String toString() {
-		return "TextInMessage [context=" + context + ", getToUserName()=" + getToUserName() + ", getFromUserName()="
+		return "TextInMessage [content=" + content + ", getToUserName()=" + getToUserName() + ", getFromUserName()="
 				+ getFromUserName() + ", getCreateTime()=" + getCreateTime() + ", getMsgType()=" + getMsgType()
 				+ ", getMsgId()=" + getMsgId() + "]";
 	}
+
+	
 	
 }
