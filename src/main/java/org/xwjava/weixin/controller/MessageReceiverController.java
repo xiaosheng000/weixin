@@ -39,7 +39,7 @@ public class MessageReceiverController {
 	@PostMapping
 	//@RequestBody注解表示把请求内容获取出来，并且转换为String传入给xml参数。
 	public String onMessage(
-			@RequestParam("singnature")String singnature,// 
+			@RequestParam("signature")String signature,// 
 			@RequestParam("timestamp")String timestamp,//
 			@RequestParam("nonce")String nonce,//
 			@RequestBody String xml) {
