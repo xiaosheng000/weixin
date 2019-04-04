@@ -67,15 +67,15 @@ public class JsonRedisSerializer extends Jackson2JsonRedisSerializer<InMessage> 
 			//把读取到的字节数组，转换为类名
 			String className= new String(classNameBytes,"UTF-8");
 			//通过类名，加载类对象
-			@SuppressWarnings("unchecked")
-			Class<? extends InMessage> cla=(Class<? extends InMessage>) Class.forName(className);
 			
-			return this.objectMapper.readValue(Arrays.copyOfRange(bytes, length+4, bytes.length),cla);
+			Class<?> cla=Class.forName(className);
+			 
+			
 		}catch(Exception e) {
 			throw new SerializationException("反序列化对象出现问："+ e.getLocalizedMessage(),e);
 		}
 		
-//		return super.deserialize(bytes);
+		       return super.deserialize(bytes);
 	}
 
 }
