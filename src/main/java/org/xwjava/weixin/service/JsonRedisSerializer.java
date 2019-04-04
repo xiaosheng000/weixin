@@ -4,31 +4,25 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.util.Arrays;
 
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
-import org.xwjava.weixin.domain.InMessage;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class JsonRedisSerializer extends Jackson2JsonRedisSerializer<InMessage> {
-
-	private ObjectMapper objectMapper = new ObjectMapper();
+public class JsonRedisSerializer extends Jackson2JsonRedisSerializer<Object> {
 	
 	public JsonRedisSerializer() {
-		super(InMessage.class);
+		super(Object.class);
 		
 	}
 	//序列化对象的时候被调用的方法，负责把InMessage转换为Byte[]
 	@Override
-	public byte[] serialize(InMessage t) throws SerializationException {
+	public byte[] serialize(Object t) throws SerializationException {
 		//我们现在希望把对象序列化成JSON字符串，但是JSON字符串本身不确定对象的类型，所以需要扩展：
 		//序列化的时候先把类名的长度写出去，再写出类名，最后再来写JSON字符串
+		
 		ByteArrayOutputStream baos=new ByteArrayOutputStream();//把数据输出到一个字节数组
 		DataOutputStream out=new DataOutputStream(baos);
-		
 		try {
 			
 		String className=t.getClass().getName();//获取类名
@@ -54,7 +48,7 @@ public class JsonRedisSerializer extends Jackson2JsonRedisSerializer<InMessage> 
 	
 	//在反序列化的时候被调用的方法，负责把字节数组转换为InMessage
 	@Override
-	public InMessage deserialize(byte[] bytes) throws SerializationException {
+	public Object deserialize(byte[] bytes) throws SerializationException {
 	
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
 		DataInputStream in = new DataInputStream(bais);
