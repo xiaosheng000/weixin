@@ -81,5 +81,12 @@ public class JsonRedisSerializer extends Jackson2JsonRedisSerializer<Object> {
 		
 		   //    return super.deserialize(bytes);
 	}
+	public ObjectMapper getObjectMapper() {
+		return objectMapper;
+	}
+
+	public void setObjectMapper(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
 
 }
