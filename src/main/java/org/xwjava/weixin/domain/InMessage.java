@@ -9,7 +9,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javassist.SerialVersionUID;
 
 @XmlAccessorType(XmlAccessType.FIELD)//JAXB从字段获取配置
 @XmlRootElement(name="xml")//JAXB读取xml时根元素名称
