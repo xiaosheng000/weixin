@@ -4,12 +4,21 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.util.Arrays;
 
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
+import org.xwjava.weixin.domain.InMessage;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+
+
 
 
 public class JsonRedisSerializer extends Jackson2JsonRedisSerializer<Object> {
+	
+	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	public JsonRedisSerializer() {
 		super(Object.class);
@@ -24,6 +33,7 @@ public class JsonRedisSerializer extends Jackson2JsonRedisSerializer<Object> {
 		ByteArrayOutputStream baos=new ByteArrayOutputStream();//把数据输出到一个字节数组
 		DataOutputStream out=new DataOutputStream(baos);
 		try {
+			
 			
 		String className=t.getClass().getName();//获取类名
 		byte[] classNameBytes = className.getBytes("UTF-8");
@@ -61,15 +71,15 @@ public class JsonRedisSerializer extends Jackson2JsonRedisSerializer<Object> {
 			//把读取到的字节数组，转换为类名
 			String className= new String(classNameBytes,"UTF-8");
 			//通过类名，加载类对象
+			@SuppressWarnings("unchecked")
+			Class<? extends InMessage> cla=(Class<? extends InMessage>) Class.forName(className);
 			
-			Class<?> cla=Class.forName(className);
-			 
-			
+			return this.objectMapper.readValue(Arrays.copyOfRange(bytes, length+4, bytes.length),cla);
 		}catch(Exception e) {
 			throw new SerializationException("反序列化对象出现问："+ e.getLocalizedMessage(),e);
 		}
 		
-		       return super.deserialize(bytes);
+		   //    return super.deserialize(bytes);
 	}
 
 }
